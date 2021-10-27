@@ -19,11 +19,20 @@
     }
 
     // TODO: Fetch a list of APODs from the database.
-    // Here the apods are filled with dummy data.
-    apods = [["https://apod.nasa.gov/apod/image/2102/rosette_goldman_960.jpg", "02-21-2021"], ["https://apod.nasa.gov/apod/image/2102/rosette_goldman_960.jpg", "02-20-2021"]]
+    var xhr = new XMLHttpRequest();
+    var url = "/api/images";
+    xhr.open("GET", url, false);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send();
+    var data = xhr.response;
+    var jsonResponse = JSON.parse(data);
+
+    apods = jsonResponse["images"]
     var al = document.getElementById("apod-list");
     for (apod of apods) {
         console.log(apod)
-        al.appendChild(makeAPOD(apod[0], apod[1]))
+        if (apod["fav"] == "1") {
+            al.appendChild(makeAPOD(apod["url"], apod["date"]))
+        }
     }
 })()
